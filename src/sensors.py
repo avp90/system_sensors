@@ -310,7 +310,7 @@ sensors = {
           'power_source':
                 {'name': 'Power Source',
                  'icon': 'power-plug',
-                 'sensor_type': 'binary_sensor',
+                 'sensor_type': 'sensor',
                  'function': get_power_source},
           'last_boot':
                 {'name': 'Last Boot',
