@@ -132,6 +132,9 @@ def check_settings(settings):
     if 'power_status' in settings['sensors'] and rpi_power_disabled:
         write_message_to_console('Unable to import rpi_bad_power library, or is incompatible on host architecture. Power supply info will not be shown.')
         settings['sensors']['power_status'] = False
+    if 'power_source' in settings['sensors'] and power_source_disabled:
+        write_message_to_console('Unable to import Power library, or is incompatible on host architecture. Power Source info will not be shown.')
+        settings['sensors']['power_source'] = False
     if 'updates' in settings['sensors'] and apt_disabled:
         write_message_to_console('Unable to import apt package. Available updates will not be shown.')
         settings['sensors']['updates'] = False

@@ -13,13 +13,21 @@ import sys
 # Only needed if using alternate method of obtaining CPU temperature (see commented out code for approach)
 #from os import walk
 
-
 rpi_power_disabled = True
 try:
     from rpi_bad_power import new_under_voltage
     if new_under_voltage() is not None:
         # Only enable if import works and function returns a value
         rpi_power_disabled = False
+except ImportError:
+    pass
+
+power_source_disabled = True
+try:
+    from power import PowerManagement, POWER_TYPE_AC, POWER_TYPE_BATTERY, POWER_TYPE_UPS
+    if PowerManagement() is not None:
+        # Only enable if import works and function returns a value
+        power_source_disabled = False
 except ImportError:
     pass
 
@@ -44,6 +52,9 @@ DEFAULT_TIME_ZONE = None
 
 if not rpi_power_disabled:
     _underVoltage = new_under_voltage()
+
+if not power_source_disabled:
+    _powerManager = PowerManagement()
 
 def set_default_timezone(timezone):
     global DEFAULT_TIME_ZONE
@@ -178,6 +189,17 @@ def get_wifi_ssid():
 def get_rpi_power_status():
     return 'ON' if _underVoltage.get() else 'OFF'
 
+def get_power_source():
+    power_source_type = _powerManager.get_providing_power_source_type()
+    if power_source_type == POWER_TYPE_AC:
+        return 'AC'
+    elif power_source_type == POWER_TYPE_BATTERY:
+        return 'BATTERY'
+    elif power_source_type == POWER_TYPE_UPS:
+        return 'UPS'
+    else: 
+        return 'UNKNOWN'
+
 def get_hostname():
     return socket.gethostname()
 
@@ -285,6 +307,11 @@ sensors = {
                  'class': 'problem',
                  'sensor_type': 'binary_sensor',
                  'function': get_rpi_power_status},
+          'power_source':
+                {'name': 'Power Source',
+                 'icon': 'power-plug',
+                 'sensor_type': 'binary_sensor',
+                 'function': get_power_source},
           'last_boot':
                 {'name': 'Last Boot',
                  'class': 'timestamp',

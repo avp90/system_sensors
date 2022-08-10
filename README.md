@@ -11,13 +11,13 @@
 I’ve created a simple python script that runs every 60 seconds and sends several system data over MQTT. It uses the MQTT Discovery for Home Assistant so you don’t need to configure anything in Home Assistant if you have discovery enabled for MQTT
 
 It currently logs the following data:
-
 - CPU usage
 - CPU temperature
 - CPU Clock Speed
 - Disk usage
 - Memory usage
 - Power status of the RPI
+- Power source type (AC, Battery or UPS)
 - Last boot
 - Last message received timestamp
 - Swap usage
@@ -32,11 +32,9 @@ It currently logs the following data:
 - Network Download & Upload throughput
 
 # System Requirements
-
 You need to have at least **python 3.6** installed to use System Sensors.
 
 # Installation:
-
 1. Clone this repo >> git clone https://github.com/Sennevds/system_sensors.git
 2. cd system_sensors
 3. pip3 install -r requirements.txt

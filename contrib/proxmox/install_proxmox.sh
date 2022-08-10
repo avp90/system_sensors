@@ -10,19 +10,15 @@ HOST=$3
 DEVICENAME=$4
 TIMEZONE=$(timedatectl |grep "Time zone"|awk '{print $3}')
 
-echo "update apt-get and install"
+echo "update apt-get and install packages"
 apt-get update
 apt-get install -y git lm-sensors python3 python3-pip curl python3-apt
 
-
-
-
-echo "Create group and user systemsensors "
+echo "create group and user systemsensors"
 groupadd systemsensors
 useradd systemsensors -r -g systemsensors
 
-echo "Install pip requirements"
-
+echo "install pip requirements"
 curl -o /tmp/requirements.txt https://raw.githubusercontent.com/Sennevds/system_sensors/master/requirements.txt
 pip3 install -r /tmp/requirements.txt
 
@@ -57,6 +53,7 @@ sensors:
   net_rx: true
   swap_usage: true
   power_status: true
+  power_source: true
   last_boot: false
   hostname: true
   host_ip: true
@@ -70,9 +67,7 @@ sensors:
     # Only add mounted drives here, e.g.:
     # Drive1: /media/storage" > /home/systemsensors/etc/settings.yaml
 
-
-
-
+echo "install Service"
 echo "[Unit]
 Description=System Sensor service
 After=multi-user.target
@@ -89,4 +84,3 @@ systemctl daemon-reload
 systemctl enable system_sensors
 systemctl start system_sensors
 systemctl status system_sensors
-
